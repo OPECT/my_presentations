@@ -4,7 +4,8 @@
 
 - Name lookup
 - ADL
-//All examples are verified with gcc 5.4.0(online compiler)//
+
+\\All examples are verified with gcc 5.4.0(online compiler)\\
 
 ---
 
