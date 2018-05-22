@@ -1,7 +1,4 @@
 ---
-theme: "white"
-#customTheme: "style2"
----
 
 # Argument Dependent Lookup
 
