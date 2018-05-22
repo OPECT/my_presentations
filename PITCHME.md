@@ -4,7 +4,7 @@
 
 - Name lookup
 - ADL
-- All examples are verified with gcc 5.4.0(online compiler)
+//All examples are verified with gcc 5.4.0(online compiler)//
 
 ---
 
@@ -53,7 +53,7 @@ class Base { public:
 class Derived : public Base { public:
     void func(int X2)
     {
-        int X1 = 2;
+        int X1 = 1;
         std::cout << X1 << std::endl; // local scope X1
         std::cout << X2 << std::endl; // function scope
         std::cout << X3 << std::endl; // class scope (B::X3)
@@ -69,7 +69,7 @@ class Derived : public Base { public:
 ```cpp
 namespace Utility {
     template<typename T> void DoSomething(T& t) {
-        SpecialFunc(t);
+        SpecialFunc(t); // Second face lookup!
     } }
 
 namespace Domain {
@@ -88,10 +88,14 @@ int main() {
 ---
 
 ## ADL
-Main purpose of ADL is to generate additional scope for Name Lookup.
+ADL generates additional scope for Name Lookup and then regular overloading rules are applied.
 - For pointer and array types, ADL considers underlying type.
 - For enumeration types, enclosing namespace is considered.
 - For class members, the enclosing class is cosidered by ADL.
+
+---
+
+##### More of ADL scope
 - For function types, ADL considers:
   - namespaces and classes associated with all the parameter types
   - and those associated with the return type
@@ -102,7 +106,7 @@ Main purpose of ADL is to generate additional scope for Name Lookup.
 
 ---
 
-#### When ADL is trigered
+##### When ADL is trigered
 ADL applies only to unqualified names that looks like they name a nonmember function in a function call.
 So ADL is NOT triggered in following cases:
 - Name is qualified
