@@ -1,13 +1,10 @@
 ---
-theme: "white"
-#customTheme: "style2"
----
 
 # Argument Dependent Lookup
 
-- Name Lookup
-- ADL and some examples
-- Additional informarion
+- Name lookup
+- ADL
+- Some pitfalls
 - All examples are verified with gcc 5.4.0(online compiler)
 
 ---
@@ -23,20 +20,20 @@ theme: "white"
 ##### Qualified name lookup
 
 ```cpp
-class B { public:
+class Base { public:
     static int X1;
     int X2 = 2;
 };
-class D : public B {};
+class Derived : public Base {};
 
-int B::X1 = 1;
+int Base::X1 = 1;
 int X3 = 3;
 
-void func(D* d)
+void func(Derived* d)
 {
-    std::cout << D::X1 << std::endl; // OK!
+    std::cout << Derived::X1 << std::endl; // OK!
     std::cout << d->X2 << std::endl; // OK!
-    std::cout << D::X3 << std::endl; // Wrong!
+    std::cout << Derived::X3 << std::endl; // Error!
 }
 ```
 
