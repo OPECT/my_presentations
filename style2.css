@@ -1,0 +1,49 @@
+.reveal p {
+    font-size: 0.8em;
+}
+
+.reveal li {
+    font-size: 0.8em;
+}
+
+.reveal tr th {
+    font-size: 0.75em;
+}
+
+.reveal tr td {
+    font-size: 0.65em;
+}
+
+body {
+    background: url("./img/quintiq-logo.jpg");
+    background-color: white;
+    background-repeat: no-repeat;
+    background-position: 1% 97%;
+    background-size: 11%;
+}
+
+.reveal section img {
+    margin: 0%;
+    border-style: none;
+    box-shadow: none;
+}
+
+.reveal h1 {
+    font-size: 2.1em;
+}
+
+.reveal h2 {
+    text-transform: none;
+}
+
+.reveal h3 {
+    text-transform: none;
+}
+
+.reveal h4 {
+    text-transform: none;
+}
+
+code {
+    text-align: left;
+}
