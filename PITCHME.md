@@ -1,11 +1,14 @@
 ---
+theme: "white"
+#customTheme: "style2"
+---
 
 # Argument Dependent Lookup
 
 - Name lookup
 - ADL
 
-// All examples are verified with gcc 5.4.0(online compiler) //
+*All examples are verified with gcc 5.4.0(online compiler)*
 
 ---
 
@@ -68,9 +71,9 @@ class Derived : public Base { public:
 ##### ADL motivation
 
 ```cpp
-namespace Utility {
+namespace Utils {
     template<typename T> void DoSomething(T& t) {
-        SpecialFunc(t); // Second face lookup!
+        SpecialFunc(t); // T has to provide SpecialFunc
     } }
 
 namespace Domain {
@@ -82,7 +85,7 @@ namespace Domain {
 
 int main() {
     Domain::ConcreteClass t;
-    Utility::DoSomething(t);
+    Utils::DoSomething(t);
 }
 ```
 
@@ -109,7 +112,8 @@ ADL generates additional scope for Name Lookup and then regular overloading rule
 
 ##### When ADL is trigered
 ADL applies only to unqualified names that looks like they name a nonmember function in a function call.
-So ADL is NOT triggered in following cases:
+
+So ADL is **NOT** triggered in following cases:
 - Name is qualified
 - Name doesn't look like a function call
 - Ordinary lookup finds name of member functin
@@ -118,78 +122,117 @@ So ADL is NOT triggered in following cases:
 
 ---
 
-##### ADL and function overload
+##### ADL example1
 
 ```cpp
-namespace B {
-    class Base;
-    class Test; }
-
-void special_func(B::Base& t) {
-    std::cout<<"Global: special function" << std::endl;
-}
-
-namespace A { // Generic framework
-    template<typename T> void test(T& t) {
-        special_func(t);
+class Base {};
+namespace Domain1 {
+    class ConcreteClass : public Base {};
+    void SpecialFunc(ConcreteClass*, int) {
+        std::cout<<"Domain1" << std::endl;
     } }
 
-namespace B { // Particular domain
-    class Base {};
-    class Test : public Base {};
-
-    void special_func(Test& t) {
-        std::cout<<"ADL: special function" << std::endl;
+namespace Domain2 {
+    enum ConcreteEnum{TestEnum = 0};
+    void SpecialFunc(Base*, ConcreteEnum) {
+        std::cout<<"Domain2" << std::endl;
     } }
 
-int main()
-{
-    B::Base t1;
-    B::Test t2;
-    A::test(t1); // ::special_func(Not ADL)
-    A::test(t2); // B::special_func(ADL)
-}
-```
-
----
-
-##### ADL and refactoring
-
-```cpp
-namespace B {
-    class Base {};
-    class Test : public Base {};
-
-    class Test1 {Test t;};
-    void special_func(Test1& t) {
-        std::cout<<"ADL: special function" << std::endl;
+namespace Utils {
+    template<typename T, typename E> void DoSomething(T* t, E e) {
+        SpecialFunc(t,e); // T or E have to provide SpecialFunc
     } }
 
 int main() {
-    B::Base t1;
-    B::Test t2;
-    A::test(t1); // As before ::special_func(Not ADL)
-    A::test(t2); // Now its non ADL function ::special_func
+    Domain1::ConcreteClass t;
+    Utils::DoSomething(&t, Domain2::TestEnum);
 }
 ```
 
 ---
+##### ADL example1(result)
+\> Domain1
+---
 
-## More of ADL
+##### ADL example2
 
+```cpp
+class Base{};
+class FancyName { public: FancyName(Base&, int) {
+    std::cout<<"FancyName::FancyName" << std::endl;}};
+
+namespace Domain {
+    class ConcreteClass : public Base {};
+    int FancyName(ConcreteClass*, int) { std::cout<<"Domain::FancyName" << std::endl; }
+    void SomethingImpl(ConcreteClass*) {std::cout<<"Domain::SomethingImpl" << std::endl;}}
+
+namespace Utils {
+    class Helper { public:
+      template<typename T> void DoSomething(T& t) {
+        auto v = FancyName(t, 5);  
+        SomethingImpl(t);
+      }
+      void SomethingImpl(Base& t) {std::cout<<"Utils::Helper::SomethingImpl" << std::endl;}
+    }; }
+
+int main() {
+    Domain::ConcreteClass t;
+    Utils::Helper h;
+    h.DoSomething(t);
+}
+```
+
+---
+##### ADL example2(result)
+- \> FancyName::FancyName
+
+- \> Utils::Helper::SomethingImpl
+
+---
+
+##### ADL example3
+
+```cpp
+void SpecialFunc(double) { std::cout<<"Global::Double" << std::endl; }
+void SpecialFunc(int) { std::cout<<"Global::Int" << std::endl; }
+
+namespace Domain {
+    class MyDouble {public: MyDouble(double){}};
+    class MyInt {public: MyInt(int){}};
+    typedef int Int;
+    typedef MyDouble Double;
+
+    void SpecialFunc(Double t) { std::cout<<"Domain::Double" << std::endl; }
+    void SpecialFunc(Int t) { std::cout<<"Domain::Int" << std::endl; } }
+
+namespace Utils {
+    template<typename T> void DoSomething(T t) {
+        SpecialFunc(t);
+    } }
+
+int main() {
+    Utils::DoSomething<Domain::Double>(5.0);    
+    Utils::DoSomething<Domain::Int>(5);
+}
+```
+
+---
+##### ADL example3(result)
+\> Domain::Double
+
+\> Global::Int
 
 ---
 
 ## Additional informarion
-Inspired by the book: C++ Templates: The Complete Guide
-
-Now second addition with C++17 features
+The book: C++ Templates: The Complete Guide
 https://www.amazon.com/C-Templates-Complete-Guide-2nd/dp/0321714121
 
 Code snippets:
 - http://rextester.com/KYJIU95018
 - http://rextester.com/SVK69998
 - http://rextester.com/RSVCP95364
-- http://rextester.com/CBVYC5858
-- http://rextester.com/LHOV16189
+- http://rextester.com/ZGPTC88744
+- http://rextester.com/EMQGY80139
+- http://rextester.com/EEHGY18233
 
