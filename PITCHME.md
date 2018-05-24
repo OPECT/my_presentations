@@ -146,7 +146,7 @@ int main() {
 
 ---
 ##### ADL example1(result)
-\> Domain1
+<p style="text-align: left;">\> Domain1</p>
 ---
 
 ##### ADL example2
