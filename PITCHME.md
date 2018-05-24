@@ -1,8 +1,3 @@
----
-theme: "white"
-#customTheme: "style2"
----
-
 # Argument Dependent Lookup
 
 - Name lookup
@@ -184,9 +179,9 @@ int main() {
 
 ---
 ##### ADL example2(result)
-- \> FancyName::FancyName
+<p style="text-align: left;">\> FancyName::FancyName</p>
+<p style="text-align: left;">\> Utils::Helper::SomethingImpl</p>
 
-- \> Utils::Helper::SomethingImpl
 
 ---
 
@@ -218,13 +213,12 @@ int main() {
 
 ---
 ##### ADL example3(result)
-\> Domain::Double
-
-\> Global::Int
+<p style="text-align: left;">\> Domain::Double</p>
+<p style="text-align: left;">\> Global::Int</p>
 
 ---
 
-## Additional informarion
+## Additional information
 The book: C++ Templates: The Complete Guide
 https://www.amazon.com/C-Templates-Complete-Guide-2nd/dp/0321714121
 
